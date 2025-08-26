@@ -1,36 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dynamic Quote Generator with Sync</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Quote Generator</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
 
-  <div id="quoteDisplay"></div>
+  <!-- Quote Display -->
+  <div id="quoteDisplay">Click "New Quote" to see something inspiring!</div>
+  <button onclick="displayRandomQuote()">New Quote</button>
 
-  <button onclick="displayRandomQuote()">Show New Quote</button>
+  <!-- Filter by Category -->
+  <div>
+    <label for="categoryFilter">Filter by Category:</label>
+    <select id="categoryFilter" onchange="filterQuotes()"></select>
+  </div>
 
-  <h2>Add a Quote</h2>
-  <form id="addQuoteForm" onsubmit="event.preventDefault(); addQuote();">
-    <input type="text" id="newQuoteText" placeholder="Enter quote" required />
-    <input type="text" id="newQuoteCategory" placeholder="Enter category" required />
-    <button type="submit">Add Quote</button>
-  </form>
+  <!-- Add New Quote -->
+  <div>
+    <h2>Add a New Quote</h2>
+    <input type="text" id="newQuoteText" placeholder="Enter quote text">
+    <input type="text" id="newQuoteCategory" placeholder="Enter category">
+    <button onclick="addQuote()">Add Quote</button>
+  </div>
 
-  <h2>Filter Quotes</h2>
-  <select id="categoryFilter" onchange="filterQuotes()">
-    <option value="all">All Categories</option>
-  </select>
+  <!-- Import/Export -->
+  <div>
+    <h2>Import / Export Quotes</h2>
+    <button onclick="exportToJsonFile()">Export Quotes</button>
+    <input type="file" id="importFile" accept="application/json" onchange="importFromJsonFile(event)">
+  </div>
 
-  <h2>Import/Export Quotes</h2>
-  <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
-  <button onclick="exportToJsonFile()">Export Quotes</button>
-
-  <h2>Sync with Server</h2>
-  <button onclick="syncWithServer()">Sync Now</button>
-  <div id="syncStatus"></div>
+  <!-- Sync with Server -->
+  <div>
+    <h2>Sync</h2>
+    <!-- updated here -->
+    <button onclick="syncQuotes()">Sync Now</button>
+    <div id="syncStatus"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
