@@ -11,7 +11,7 @@ const newQuoteBtn = document.getElementById("newQuote");
 const addQuoteBtn = document.getElementById("addQuoteBtn");
 
 // Function to display a random quote
-function showRandomQuote() {
+function displayRandomQuote() {
   if (quotes.length === 0) {
     quoteDisplay.textContent = "No quotes available. Please add one!";
     return;
@@ -42,5 +42,5 @@ function addQuote() {
 }
 
 // Event listeners
-newQuoteBtn.addEventListener("click", showRandomQuote);
+newQuoteBtn.addEventListener("click", displayRandomQuote);
 addQuoteBtn.addEventListener("click", addQuote);
