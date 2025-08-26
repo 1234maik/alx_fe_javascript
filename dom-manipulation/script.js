@@ -19,13 +19,20 @@ function loadQuotes() {
 
 // --- Display Random Quote ---
 function displayRandomQuote() {
-  if (quotes.length === 0) {
-    document.getElementById("quoteDisplay").innerHTML = "No quotes available.";
+  const selectedCategory = document.getElementById("categoryFilter").value;
+
+  let filteredQuotes = quotes;
+  if (selectedCategory !== "all") {
+    filteredQuotes = quotes.filter(q => q.category === selectedCategory);
+  }
+
+  if (filteredQuotes.length === 0) {
+    document.getElementById("quoteDisplay").innerHTML = "No quotes available in this category.";
     return;
   }
 
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  const quote = quotes[randomIndex];
+  const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+  const quote = filteredQuotes[randomIndex];
   document.getElementById("quoteDisplay").innerHTML = `"${quote.text}" <br> <em>- ${quote.category}</em>`;
 
   // Save last viewed quote in session storage
@@ -40,6 +47,7 @@ function addQuote() {
   if (newQuoteText && newQuoteCategory) {
     quotes.push({ text: newQuoteText, category: newQuoteCategory });
     saveQuotes(); // Save updated quotes to local storage
+    populateCategories(); // Update filter dropdown
     document.getElementById("newQuoteText").value = "";
     document.getElementById("newQuoteCategory").value = "";
     alert("New quote added!");
@@ -48,17 +56,36 @@ function addQuote() {
   }
 }
 
-// --- Create Add Quote Form (if not already in HTML) ---
-function createAddQuoteForm() {
-  const formContainer = document.createElement("div");
+// --- Populate Categories Dropdown ---
+function populateCategories() {
+  const categoryFilter = document.getElementById("categoryFilter");
 
-  formContainer.innerHTML = `
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button onclick="addQuote()">Add Quote</button>
-  `;
+  // Collect unique categories
+  const categories = [...new Set(quotes.map(q => q.category))];
 
-  document.body.appendChild(formContainer);
+  // Clear old options except "All"
+  categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
+
+  // Add categories dynamically
+  categories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
+
+  // Restore last selected filter
+  const savedFilter = localStorage.getItem("selectedCategory");
+  if (savedFilter) {
+    categoryFilter.value = savedFilter;
+  }
+}
+
+// --- Filter Quotes ---
+function filterQuotes() {
+  const selectedCategory = document.getElementById("categoryFilter").value;
+  localStorage.setItem("selectedCategory", selectedCategory);
+  displayRandomQuote();
 }
 
 // --- JSON Export ---
@@ -84,6 +111,7 @@ function importFromJsonFile(event) {
       if (Array.isArray(importedQuotes)) {
         quotes.push(...importedQuotes);
         saveQuotes();
+        populateCategories();
         alert("Quotes imported successfully!");
       } else {
         alert("Invalid JSON format!");
@@ -97,19 +125,19 @@ function importFromJsonFile(event) {
 
 // --- Initialize ---
 window.onload = function() {
-  loadQuotes(); // Load from local storage
+  loadQuotes(); // Load quotes from local storage
+  populateCategories(); // Populate categories dynamically
 
   // Restore last viewed quote from session storage
   const lastQuote = sessionStorage.getItem("lastQuote");
   if (lastQuote) {
     const quote = JSON.parse(lastQuote);
     document.getElementById("quoteDisplay").innerHTML = `"${quote.text}" <br> <em>- ${quote.category}</em>`;
+  } else {
+    displayRandomQuote();
   }
 
   // Attach event listeners
   document.getElementById("newQuote").addEventListener("click", displayRandomQuote);
   document.getElementById("exportJson").addEventListener("click", exportToJsonFile);
-
-  // Create add-quote form dynamically (if not already in index.html)
-  createAddQuoteForm();
 };
