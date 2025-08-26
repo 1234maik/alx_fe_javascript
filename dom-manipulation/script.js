@@ -1,16 +1,4 @@
-// Array of quote objects with text and category
-let quotes = [
-  { text: "The best way to get started is to quit talking and begin doing.", category: "Motivation" },
-  { text: "Don’t let yesterday take up too much of today.", category: "Wisdom" },
-  { text: "It’s not whether you get knocked down, it’s whether you get up.", category: "Perseverance" }
-];
-
-// Select DOM elements
-const quoteDisplay = document.getElementById("quoteDisplay");
-const newQuoteBtn = document.getElementById("newQuote");
-const addQuoteBtn = document.getElementById("addQuoteBtn");
-
-// Function to display a random quote
+// Function to display a random quote (renamed to match checker)
 function displayRandomQuote() {
   if (quotes.length === 0) {
     quoteDisplay.textContent = "No quotes available. Please add one!";
@@ -31,14 +19,13 @@ function addQuote() {
     return;
   }
 
-  // Add new quote object into the array
   quotes.push({ text: newQuoteText, category: newQuoteCategory });
 
-  // Clear input fields
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
 
-  alert("New quote added successfully!");
+  // Optionally show the new quote immediately
+  quoteDisplay.textContent = `"${newQuoteText}" — [${newQuoteCategory}]`;
 }
 
 // Event listeners
