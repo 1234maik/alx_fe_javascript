@@ -12,6 +12,12 @@
   <div id="quoteDisplay">Click the button to see a quote!</div>
   <button id="newQuote">Show New Quote</button>
 
+  <div>
+  <button id="exportJson">Export Quotes (JSON)</button>
+  <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+</div>
+
+
   <!-- Add new quote section -->
   <div id="addQuoteForm">
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
